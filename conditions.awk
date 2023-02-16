@@ -1,6 +1,7 @@
 #!/use/bin/env gawk --exec
 BEGIN {
     RS = "[[:space:]]*[;{}][[:space:]]*"
+    OFS = "\t"
     ClassDefinition = @/^class\>| class\>/
 }
 $1 == "package" {
@@ -9,8 +10,9 @@ $1 == "package" {
 $0 ~ ClassDefinition {
     print "---- "Package"."class_name()" ----"
 }
-$1 == "if" {
-    print condition()
+$1 == "if" || $1 == "while" {
+    expr = condition()
+    printf "%4d %s\n", length(expr), expr
 }
 
 function condition(   parenthesis,start,i,symbol,expresson) {
