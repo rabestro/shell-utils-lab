@@ -17,7 +17,17 @@ NF == 0 {
     printf "Is it a %s? ", Animals[CurrentNode][AnimalName]
 }
 
-/quit/ {exit}
+/yes/ {
+    print "I didn’t even hope that it would be possible to guess!"
+    exit
+}
+
+/no/ {
+    print "I give up. What animal do you have in mind?"
+    exit
+}
+
+/^quit/ {exit}
 
 END {
     print "Saving database...", writeall(DB) ? "Success!" : "Faild..."
