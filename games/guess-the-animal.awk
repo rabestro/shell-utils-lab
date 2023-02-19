@@ -13,21 +13,25 @@ BEGIN {
     start_game()
 }
 
-NF == 0 {
-    printf "Is it a %s? ", Animals[CurrentNode][AnimalName]
+Question in Animals[CurrentNode] {
+    print Animals[CurrentNode][Question]
 }
-
-/yes/ {
-    print "I didn’t even hope that it would be possible to guess!"
+AnimalName in Animals[CurrentNode] {
+    print "Is it", Animals[CurrentNode][AnimalName], "?"
+}
+{
+    getline
+}
+/yes/ && AnimalName in Animals[CurrentNode] {
+    print "It's great that I got it right!"
     exit
 }
-
-/no/ {
-    print "I give up. What animal do you have in mind?"
-    exit
+/no/ && AnimalName in Animals[CurrentNode] {
+    give_up()
 }
-
-/^quit/ {exit}
+Question in Animals[CurrentNode] {
+    CurrentNode = Animals[CurrentNode][$1 ~ /yes/]
+}
 
 END {
     print "Saving database...", writeall(DB) ? "Success!" : "Faild..."
@@ -38,6 +42,7 @@ END {
 function load_database() {
     AnimalName = "name"
     Question = "question"
+    Response = "response"
     RootNode = 1
     print "Loading database... ", readall(DB) ? "Success!" : "Faild..."
 }
@@ -60,4 +65,25 @@ function start_game() {
     print "You think of an animal, and I guess it."
     print "Press enter when you're ready."
     CurrentNode = RootNode
+    State = "question"
+}
+
+function give_up(   animal_guessed,animal_in_mind,question,answer,size) {
+    animal_guessed = Animals[CurrentNode][AnimalName]
+    print "I give up. What animal do you have in mind?"
+    getline animal_in_mind
+
+    print "Write a closed question by answering which I can distinguish "animal_in_mind" from "animal_guessed
+    print "Examples: 'Can/Have/Is it ...?'"
+    getline question
+    print "What is the correct answer for "animal_in_mind" ?"
+    getline answer
+    delete Animals[CurrentNode][AnimalName]
+    Animals[CurrentNode][Question] = question
+    size = length(Animals)
+    Animals[++size][AnimalName] = animal_in_mind
+    Animals[CurrentNode][answer ~ /yes/] = size
+    Animals[++size][AnimalName] = animal_guessed
+    Animals[CurrentNode][answer !~ /yes/] = size
+    exit
 }

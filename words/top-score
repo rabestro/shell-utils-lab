@@ -1,0 +1,1 @@
+cat words.txt | gawk 'length($0)=='$1 | gawk -f scrabble-score.awk | sort -t , -k 2nr | more
