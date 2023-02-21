@@ -1,0 +1,44 @@
+== Words and sentences
+
+However, a real text may be pretty long and still easy to read, right? There needs to be another approach. How about calculating the number of words in each sentence? Clearly, if each sentence of a text contains a lot of words, this text is hard to read.
+
+Suppose that if the text contains sentences that on average have more than 10 words per sentence, this text is hard to read. Otherwise, this text is easy to read. Don't worry, we will consider more scientific ways in the next stages.
+
+The input contains a single line of text. Output "HARD" if the text is hard to read and "EASY" if the text is easy to read.
+
+For example, the first example contains two sentences with 6 and 10 words (numbers also count as words) so the average is 8, and this is less than 10. In the second example, there are also 2 sentences but with 6 and 16 words, so the average is 11 and this is more than 10. If the average is equal to 10, the text is still considered easy to read.
+
+Don't forget that sentences can end with a full stop as well as with an exclamation mark and a question mark. But the last sentence can be with or without a punctuation mark at the end.
+
+== Score!
+
+In this stage, you will program the Automated readability index (ARI). It was introduced in 1968 and a lot of research works rely on this. The index is calculated by the following formula:
+
+This article on ARI can give you more specifics on the application and age brackets.
+
+https://en.wikipedia.org/wiki/Automated_readability_index
+
+Below you can see the table that specifies the age brackets.
+
+== More parameters
+
+The second one is SMOG index. It stands for Simple Measure of Gobbledygook. To calculate it, you need to count the number of polysyllables, which is the number of words with more than 2 syllables. The formula is shown below. You can find out more in the Wikipedia article on SMOG. The article says that at least 30 sentences are required for this index to work properly. Don't pay attention to this, just keep it in mind when you use this index in real life. As in the previous example, the grade level is calculated here, so to get the age of a person you need to use the table from the first link.
+
+```python
+
+def _syllables(word):
+    syllable_count = 0
+    vowels = 'aeiouy'
+    if word[0] in vowels:
+        syllable_count += 1
+    for index in range(1, len(word)):
+        if word[index] in vowels and word[index - 1] not in vowels:
+            syllable_count += 1
+    if word.endswith('e'):
+        syllable_count -= 1
+    if word.endswith('le') and len(word) > 2 and word[-3] not in vowels:
+        syllable_count += 1
+    if syllable_count == 0:
+        syllable_count += 1
+    return syllable_count
+```
