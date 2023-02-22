@@ -1,12 +1,21 @@
 #!/usr/bin/env gawk -f
+#
+#
 BEGIN {
     IGNORECASE = 1
+    CONVFMT = "%.0f"
+    OFMT = "%.2f"
     RS = @/[!?.]+[[:space:]]+/
     SyllablePattern = @/[aiouye]+/
+    split("5-6 6-7 7-8 8-9 9-10 10-11 11-12 12-13 13-14 14-15 15-16 16-17 17-18 18-22", Ages)
+    print "The text is:"
 }
 NR < 5 {
     gsub(/[[:space:]]+/, " ")
     print
+}
+NR == 5 {
+    print "..."
 }
 NF {
     ++Sentences
@@ -21,6 +30,7 @@ NF {
 }
 
 END {
+    Score = 4.71 * Characters / Words + 0.5 * Words / Sentences - 21.43;
     print_stats()
 }
 
@@ -38,13 +48,6 @@ function print_stats() {
     print "Characters:", Characters
     print "Syllables:", Syllables
     print "Polysyllables:", Polysyllables
+    print "The score is:", Score
+    print "This text should be understood by", Ages[""Score], "year-olds."
 }
-#    180,
-#    982,
-#    13,
-#    317,
-#    34,
-#    11.19,
-#    10.59,
-#    12.37,
-#    14.14
