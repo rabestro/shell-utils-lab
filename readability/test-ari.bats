@@ -22,26 +22,11 @@ to the languages or tooling on the platform.
 EOF
 
     cat > ari.txt <<EOF
-Unlike the other indices, the ARI, along with the Coleman-Liau,
-relies on a factor of characters per word, instead of the usual
-syllables per word. The number of characters is more readily and
-accurately counted by computer programs than syllables.
-
-The readability of most written material varies considerably
-from passage to passage. As a result, the reliability of any
-readability index is limited by the length of the text sample.
-Many factors affect the evaluation of any result from a readability
-formula, especially when you consider who will be reading your text,
-a child or an adult reader, as well as his background in the content
-area. If the written material is in his area of competency, readability
-is less important than if your text focused on a subject matter area
-with which he had little knowledge. Thus, a new employee may have
-difficulty reading a manual that is easily read by more experienced
-persons. An economist may be able to read most written material
-dealing with his specialty, yet, have difficulty reading comparatively
-introductory texts in electronics. Conversely, the electronics engineer
-might find his first encounter with a volume on economics to be difficult
-reading. In many ways this is similar to learning a foreign language.
+ARI was designed for military use in 1967.
+It was for real-time monitoring of readability on typewriters.
+It offered an automated counting method.
+It has similar results to other frameworks.
+This validates its accuracy.
 EOF
 
     cat > billy.txt <<EOF
@@ -79,6 +64,24 @@ teardown() {
     assert_line --index 7 "Characters: 618"
     assert_line --index 8 "The score is: 15.63"
     assert_line --index 9 "This text should be understood by 18-22 year-olds."
+}
+
+@test "ARI was designed for military use in 1967" {
+#    [[ $BATS_RUN_SKIPPED == "true" ]] || skip
+
+    run gawk -f ari.awk ari.txt
+
+    assert_success
+    assert_line --index 0 "The text is:"
+    assert_line --index 1 "ARI was designed for military use in 196..."
+    assert_line --index 2 "It was for real-time monitoring of reada..."
+    assert_line --index 3 "It offered an automated counting method"
+    assert_line --index 4 "..."
+    assert_line --index 5 "Words: 34"
+    assert_line --index 6 "Sentences: 5"
+    assert_line --index 7 "Characters: 186"
+    assert_line --index 8 "The score is: 7.74"
+    assert_line --index 9 "This text should be understood by 12-13 year-olds."
 }
 
 @test "Billy always listens to his mother" {
